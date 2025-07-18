@@ -80,6 +80,15 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
       - run:
+          name: Install dependencies if not cached
+          command: |
+            if [ ! -d "node_modules" ]; then
+              echo "🔄 Installing dependencies..."
+              npm ci
+            else
+              echo "✅ Dependencies found in cache"
+            fi
+      - run:
           name: Run React tests
           command: |
             mkdir -p test-results
@@ -105,6 +114,15 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
       - run:
+          name: Install dependencies if not cached
+          command: |
+            if [ ! -d "node_modules" ] || [ ! -d "node_modules/@knapsack-pro" ]; then
+              echo "🔄 Installing dependencies..."
+              npm ci
+            else
+              echo "✅ Dependencies found in cache"
+            fi
+      - run:
           name: Run React tests with Knapsack Pro
           command: |
             mkdir -p test-results
@@ -129,6 +147,15 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies if not cached
+          command: |
+            if [ ! -d "node_modules" ]; then
+              echo "🔄 Installing dependencies..."
+              npm ci
+            else
+              echo "✅ Dependencies found in cache"
+            fi
       - run:
           name: Lint React code
           command: |
@@ -159,6 +186,15 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies if not cached
+          command: |
+            if [ ! -d "node_modules" ]; then
+              echo "🔄 Installing dependencies..."
+              npm ci
+            else
+              echo "✅ Dependencies found in cache"
+            fi
       # - run:
       #     name: Create test results directory
       #     command: mkdir -p test-results
