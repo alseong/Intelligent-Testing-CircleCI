@@ -13,8 +13,9 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
-      "!<rootDir>/src/index.js",
-      "!<rootDir>/src/serviceWorker.js"
+      "!src/**/*.d.ts",
+      "!src/index.js",
+      "!src/serviceWorker.js"
     ]
   },
   "dependencies": {
@@ -29,7 +30,10 @@
     "@testing-library/user-event": "^14.4.3",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
-    "jest-junit": "^16.0.0"
+    "identity-obj-proxy": "^3.0.0",
+    "jest-junit": "^16.0.0",
+    "jest-watch-typeahead": "^2.2.2",
+    "react-app-polyfill": "^3.0.0"
   },
   "browserslist": {
     "production": [
