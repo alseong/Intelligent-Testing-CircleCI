@@ -1,171 +1,133 @@
 version: 2.1
 
-# This marks it as a setup configuration for dynamic config
-setup: true
-
-# Only need the continuation orb for this approach.
+# Add orbs for Docker and Kubernetes
 orbs:
-  continuation: circleci/continuation@2.0.0
-  path-filtering: circleci/path-filtering@2.0.1
+  docker: circleci/docker@2.2.0
+  kubernetes: circleci/kubernetes@1.3.1
 
-# Keep your parameters - they'll be passed to the generated config
 parameters:
   image-tag:
     type: string
     default: "current"
-  test-conditional:
-    type: boolean
-    default: false
 
 executors:
-  my-executor:
+  node-executor:
     docker:
-      - image: cimg/base:<< pipeline.parameters.image-tag >>
-    working_directory: /tmp
+      - image: cimg/node:18.17
+    working_directory: ~/project
+  
+  docker-executor:
+    docker:
+      - image: cimg/base:stable
+    working_directory: ~/project
 
 jobs:
-     
-  generate-data:
-    executor: my-executor
-    steps:
-      - run:
-          name: Debug parameter value
-          command: |
-            echo "test-conditional parameter value: '<< pipeline.parameters.test-conditional >>'"
-            echo "pipeline.project.slug: '<< pipeline.project.slug >>'"
-            echo "Parameter evaluation complete"
-      - when:
-          condition: << pipeline.parameters.test-conditional >>
-          steps:
-            - run:
-                name: Test conditional
-                command: echo test conditional
-      - when:
-          condition:
-            not: << pipeline.parameters.test-conditional >>
-          steps:
-            - run:
-                name: Create workspace files
-                command: |
-                  echo "JOB 1"
-                  echo "========================="
-                  
-                  # Create workspace directory
-                  mkdir -p /tmp/workspace
-                  
-                  # Create initial files
-                  echo "This is file 1!" > /tmp/workspace/file1.txt
-                  echo "This is file 2!" > /tmp/workspace/file2.txt
-                  
-                  echo "📁 Files created in this job:"
-                  ls -la /tmp/workspace/
-
-                  echo "Workspace root is /tmp/workspace"
-               
-            - persist_to_workspace:
-                root: /tmp/workspace
-                paths:
-                  - "*.txt"
-            
-  process-data:
-    executor: my-executor
-    steps:
-      - when:
-          condition: << pipeline.parameters.test-conditional >>
-          steps:
-            - run:
-                name: Skip process-data job
-                command: echo "test-conditional is true, skipping process-data job"
-      - when:
-          condition:
-            not: << pipeline.parameters.test-conditional >>
-          steps:
-            - attach_workspace:
-                at: /tmp/workspace
-            - run:
-                name: Process workspace files
-                command: |
-                  echo "Job 2"
-                  echo "======================"
-                  
-                  echo "📁 Files received from previous job:"
-                  ls -laR /tmp/workspace/
-                  echo ""
-                  
-                  mkdir -p /tmp/workspace/job2
-                  
-                  # Process the data
-                  echo "🔄 Processing data..."
-                  echo "This is file 1 from job 2" > /tmp/workspace/job2/file1job2.txt
-                  echo "This is file 2 from job 2" > /tmp/workspace/job2/file2job2.txt
-                  
-                  
-                  
-                  echo "📁 Files after processing (This will get added to workspace):"
-                  ls -laR /tmp/workspace/
-                  echo ""
-            
-            - persist_to_workspace:
-                root: /tmp/workspace
-                paths:
-                  - "*.txt"
-                  - "job2"
-            
-  publish-results:
-    executor: my-executor
-    steps:
-      - when:
-          condition: << pipeline.parameters.test-conditional >>
-          steps:
-            - run:
-                name: Skip publish-results job
-                command: echo "test-conditional is true, skipping publish-results job"
-      - when:
-          condition:
-            not: << pipeline.parameters.test-conditional >>
-          steps:
-            - attach_workspace:
-                at: /tmp/workspace
-            - run:
-                name: Show final workspace state
-                command: |
-                  echo "Job 2"
-                  echo "======================"
-                  echo "📁 Files received from previous job:"
-                  ls -laR /tmp/workspace/
-                  echo ""
-            
-            
-  setup:
-    executor: continuation/default
+  install-dependencies:
+    executor: node-executor
     steps:
       - checkout
       - run:
-          name: Generate dynamic configuration
+          name: Install npm dependencies
           command: |
-            # Create your generate-config script
-            chmod +x .circleci/generate-config.sh
-            ./.circleci/generate-config.sh > generated-config.yml
-      - continuation/continue:
-          configuration_path: generated-config.yml
+            npm install
+            echo "✅ All dependencies installed!"
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+  
+  test-react-functionality:
+    executor: node-executor
+    parallelism: 4
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies if not cached
+          command: |
+            if [ ! -d "node_modules" ]; then
+              echo "🔄 Installing dependencies..."
+              npm ci
+            else
+              echo "✅ Dependencies found in cache"
+              # Verify critical dependencies are properly installed
+              if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
+                echo "🔄 Detected corrupted dependencies, reinstalling..."
+                rm -rf node_modules
+                npm ci
+              fi
+            fi
+      - run:
+          name: Run React tests
+          command: |
+            mkdir -p test-results
+            find src -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r -I {} npm test {} -- --coverage --watchAll=false --reporters=default --reporters=jest-junit"
+            echo "✅ React tests completed"
+          environment:
+            CI: true
+            JEST_JUNIT_OUTPUT_DIR: test-results
+            JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: coverage
+          destination: coverage-report
+
+  test-react-functionality-knapsack:
+    executor: node-executor
+    parallelism: 4
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies if not cached
+          command: |
+            if [ ! -d "node_modules" ] || [ ! -d "node_modules/@knapsack-pro" ]; then
+              echo "🔄 Installing dependencies..."
+              npm ci
+            else
+              echo "✅ Dependencies found in cache"
+              # Verify critical dependencies are properly installed
+              if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
+                echo "🔄 Detected corrupted dependencies, reinstalling..."
+                rm -rf node_modules
+                npm ci
+              fi
+            fi
+      - run:
+          name: Run React tests with Knapsack Pro
+          command: |
+            mkdir -p test-results
+            npx knapsack-pro-jest --runInBand
+            echo "✅ Knapsack Pro React tests completed"
+          environment:
+            CI: true
+            KNAPSACK_PRO_TEST_FILE_PATTERN: "{src/**/*.test.js,src/**/*.spec.js}"
+            JEST_JUNIT_OUTPUT_DIR: test-results
+            JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: coverage
+          destination: coverage-report
 
 workflows:
-  setup-workflow:
+  test:
     jobs:
-      #- setup
-      - path-filtering/filter:
-          base-revision: main
-          mapping: |
-            src/.* run-react-tests true
-            package\.json run-react-tests true
-            public/.* run-react-tests true
-          config-path: .circleci/continue-test.yml
-      # workspace demonstration. When using dynamic config, you can only have 1 workflow.
-      - generate-data
-      - process-data:
+      - install-dependencies
+            
+      - test-react-functionality:
           requires:
-            - generate-data
-      - publish-results:
+            - install-dependencies
+            
+      - test-react-functionality-knapsack:
           requires:
-            - process-data
+            - install-dependencies
+
+  
   

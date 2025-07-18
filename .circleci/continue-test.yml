@@ -87,6 +87,12 @@ jobs:
               npm ci
             else
               echo "✅ Dependencies found in cache"
+              # Verify critical dependencies are properly installed
+              if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
+                echo "🔄 Detected corrupted dependencies, reinstalling..."
+                rm -rf node_modules
+                npm ci
+              fi
             fi
       - run:
           name: Run React tests
@@ -121,6 +127,12 @@ jobs:
               npm ci
             else
               echo "✅ Dependencies found in cache"
+              # Verify critical dependencies are properly installed
+              if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
+                echo "🔄 Detected corrupted dependencies, reinstalling..."
+                rm -rf node_modules
+                npm ci
+              fi
             fi
       - run:
           name: Run React tests with Knapsack Pro
@@ -155,6 +167,12 @@ jobs:
               npm ci
             else
               echo "✅ Dependencies found in cache"
+              # Verify critical dependencies are properly installed
+              if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
+                echo "🔄 Detected corrupted dependencies, reinstalling..."
+                rm -rf node_modules
+                npm ci
+              fi
             fi
       - run:
           name: Lint React code
@@ -194,6 +212,12 @@ jobs:
               npm ci
             else
               echo "✅ Dependencies found in cache"
+              # Verify critical dependencies are properly installed
+              if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
+                echo "🔄 Detected corrupted dependencies, reinstalling..."
+                rm -rf node_modules
+                npm ci
+              fi
             fi
       # - run:
       #     name: Create test results directory
