@@ -12,20 +12,6 @@ executors:
     working_directory: ~/project
 
 jobs:
-  install-dependencies:
-    executor: node-executor
-    steps:
-      - checkout
-      - run:
-          name: Install npm dependencies
-          command: |
-            npm install
-            echo "✅ All dependencies installed!"
-      - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-
   test-react-functionality-knapsack:
     executor: node-executor
     parallelism: 4
@@ -34,8 +20,9 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - run:
-          name: Install dependencies if not cached
+          name: Install dependencies
           command: |
             if [ ! -d "node_modules" ] || [ ! -d "node_modules/@knapsack-pro" ]; then
               echo "🔄 Installing dependencies..."
@@ -46,10 +33,14 @@ jobs:
               if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
                 echo "🔄 Detected corrupted dependencies, reinstalling..."
                 rm -rf node_modules
-                # Use npm install instead of npm ci to handle package-lock.json sync issues
                 npm install
               fi
             fi
+            echo "✅ All dependencies ready!"
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
       - run:
           name: Run React tests with Knapsack Pro
           command: |
@@ -70,10 +61,7 @@ jobs:
 workflows:
   test:
     jobs:
-      - install-dependencies
-      - test-react-functionality-knapsack:
-          requires:
-            - install-dependencies
+      - test-react-functionality-knapsack
 
   
   
