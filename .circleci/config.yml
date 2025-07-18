@@ -28,12 +28,15 @@ jobs:
           command: |
             echo "📁 Current directory:"
             pwd
-            echo "📁 Directory structure:"
-            ls -la
             echo "📁 Tests directory:"
-            ls -la tests/ || echo "tests directory not found"
-            echo "📁 Test files found with pattern:"
-            find . -name "*.test.js" | head -10
+            ls -la tests/
+            echo "📁 Test files with various patterns:"
+            echo "Pattern: tests/*.test.js"
+            ls tests/*.test.js | head -5
+            echo "Pattern: ./tests/**/*.test.js"
+            find ./tests -name "*.test.js" | head -5
+            echo "📁 Testing glob patterns:"
+            node -e "console.log(require('glob').sync('tests/**/*.test.js'))" || echo "glob test failed"
       - run:
           name: Run React tests with Knapsack Pro
           command: |
@@ -42,7 +45,7 @@ jobs:
             echo "✅ Knapsack Pro React tests completed"
           environment:
             CI: true
-            KNAPSACK_PRO_TEST_FILE_PATTERN: "tests/**/*.test.js"
+            KNAPSACK_PRO_TEST_FILE_PATTERN: "./tests/**/*.test.js"
             JEST_JUNIT_OUTPUT_DIR: test-results
             JEST_JUNIT_OUTPUT_NAME: results-${CIRCLE_NODE_INDEX}.xml
       - store_test_results:
