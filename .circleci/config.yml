@@ -17,30 +17,12 @@ jobs:
     parallelism: 4
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
       - run:
           name: Install dependencies
           command: |
-            if [ ! -d "node_modules" ] || [ ! -d "node_modules/@knapsack-pro" ]; then
-              echo "🔄 Installing dependencies..."
-              npm ci
-            else
-              echo "✅ Dependencies found in cache"
-              # Verify critical dependencies are properly installed
-              if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
-                echo "🔄 Detected corrupted dependencies, reinstalling..."
-                rm -rf node_modules
-                npm install
-              fi
-            fi
-            echo "✅ All dependencies ready!"
-      - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
-          paths:
-            - node_modules
+            echo "🔄 Installing fresh dependencies..."
+            npm ci
+            echo "✅ All dependencies installed!"
       - run:
           name: Run React tests with Knapsack Pro
           command: |
