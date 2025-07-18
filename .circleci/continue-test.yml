@@ -362,7 +362,7 @@ jobs:
 
 workflows:
   react-test-workflow:
-    when: << pipeline.parameters.run-react-tests >>
+    # when: << pipeline.parameters.run-react-tests >>
     jobs:
       - install-dependencies
       
