@@ -373,11 +373,11 @@ workflows:
       #     requires:
       #       - install-dependencies
       # NEW: Test the optimization feature
-      - test-react-functionality-optimized:
+      - test-react-functionality-optimized
           # requires:
           #   - install-dependencies
       # NEW: Knapsack Pro Jest for optimal test parallelization
-      - test-react-functionality-knapsack:
+      - test-react-functionality-knapsack
           # requires:
           #   - install-dependencies
       # - lint-react-code:
