@@ -31,7 +31,7 @@ jobs:
             echo "✅ Knapsack Pro React tests completed"
           environment:
             CI: true
-            KNAPSACK_PRO_TEST_FILE_PATTERN: "{src/**/*.test.js,src/**/*.spec.js}"
+            KNAPSACK_PRO_TEST_FILE_PATTERN: "{tests/**/*.test.js}"
             JEST_JUNIT_OUTPUT_DIR: test-results
             JEST_JUNIT_OUTPUT_NAME: results-${CIRCLE_NODE_INDEX}.xml
       - store_test_results:
