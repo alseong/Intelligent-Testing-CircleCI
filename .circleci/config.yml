@@ -27,18 +27,18 @@ jobs:
           name: Run React tests with Knapsack Pro
           command: |
             mkdir -p test-results
-            npx knapsack-pro-jest --runInBand
+            npx knapsack-pro-jest --runInBand --reporters=default --reporters=jest-junit
             echo "✅ Knapsack Pro React tests completed"
           environment:
             CI: true
             KNAPSACK_PRO_TEST_FILE_PATTERN: "{src/**/*.test.js,src/**/*.spec.js}"
             JEST_JUNIT_OUTPUT_DIR: test-results
-            JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
+            JEST_JUNIT_OUTPUT_NAME: results-${CIRCLE_NODE_INDEX}.xml
       - store_test_results:
           path: test-results
       - store_artifacts:
-          path: coverage
-          destination: coverage-report
+          path: test-results
+          destination: test-reports
 
 workflows:
   test:
