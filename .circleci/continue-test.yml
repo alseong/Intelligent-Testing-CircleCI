@@ -126,7 +126,7 @@ jobs:
           name: Run React tests with Knapsack Pro
           command: |
             mkdir -p test-results
-            npx knapsack-pro-jest --runInBand --config jest.config.js
+            npx knapsack-pro-jest --runInBand
             echo "✅ Knapsack Pro React tests completed"
           environment:
             CI: true

@@ -10,6 +10,13 @@
     "test:knapsack": "npx knapsack-pro-jest",
     "eject": "react-scripts eject"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!<rootDir>/src/index.js",
+      "!<rootDir>/src/serviceWorker.js"
+    ]
+  },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
