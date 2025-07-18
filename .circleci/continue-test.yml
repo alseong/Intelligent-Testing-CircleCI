@@ -95,6 +95,32 @@ jobs:
           path: coverage
           destination: coverage-report
 
+  # Knapsack Pro Jest test job for optimal test parallelization
+  test-react-functionality-knapsack:
+    executor: node-executor
+    parallelism: 4
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Run React tests with Knapsack Pro
+          command: |
+            mkdir -p test-results
+            npx knapsack-pro-jest --runInBand
+            echo "✅ Knapsack Pro React tests completed"
+          environment:
+            CI: true
+            KNAPSACK_PRO_TEST_FILE_PATTERN: "{src/**/*.test.js,src/**/*.spec.js}"
+            JEST_JUNIT_OUTPUT_DIR: test-results
+            JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: coverage
+          destination: coverage-report
+
   lint-react-code:
     executor: node-executor
     parallelism: 2
@@ -350,6 +376,10 @@ workflows:
       - test-react-functionality-optimized:
           requires:
             - install-dependencies
+      # NEW: Knapsack Pro Jest for optimal test parallelization
+      - test-react-functionality-knapsack:
+          requires:
+            - install-dependencies
       - lint-react-code:
           requires:
             - install-dependencies
@@ -359,6 +389,7 @@ workflows:
             - test-react-build
             - test-react-functionality
             - test-react-functionality-optimized  # Include new job in requirements
+            - test-react-functionality-knapsack  # Include Knapsack Pro job in requirements
             - lint-react-code
           filters:
             branches:
