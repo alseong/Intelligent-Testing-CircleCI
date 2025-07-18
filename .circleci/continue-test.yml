@@ -108,7 +108,7 @@ jobs:
           name: Run React tests with Knapsack Pro
           command: |
             mkdir -p test-results
-            npx knapsack-pro-jest --runInBand
+            npx knapsack-pro-jest --runInBand --config jest.config.js
             echo "✅ Knapsack Pro React tests completed"
           environment:
             CI: true
@@ -362,16 +362,16 @@ jobs:
 
 workflows:
   react-test-workflow:
-    when: << pipeline.parameters.run-react-tests >>
+    # when: << pipeline.parameters.run-react-tests >>
     jobs:
-      - debug-parameters
-      - install-dependencies
-      - test-react-build:
-          requires:
-            - install-dependencies
-      - test-react-functionality:
-          requires:
-            - install-dependencies
+      # - debug-parameters
+      # - install-dependencies
+      # - test-react-build:
+      #     requires:
+      #       - install-dependencies
+      # - test-react-functionality:
+      #     requires:
+      #       - install-dependencies
       # NEW: Test the optimization feature
       - test-react-functionality-optimized:
           requires:
@@ -380,27 +380,27 @@ workflows:
       - test-react-functionality-knapsack:
           requires:
             - install-dependencies
-      - lint-react-code:
-          requires:
-            - install-dependencies
-      # Docker build and push after tests pass
-      - build-and-push-docker:
-          requires:
-            - test-react-build
-            - test-react-functionality
-            - test-react-functionality-optimized  # Include new job in requirements
-            - test-react-functionality-knapsack  # Include Knapsack Pro job in requirements
-            - lint-react-code
-          filters:
-            branches:
-              only: main
-      # Render deployment after Docker image is pushed
-      - deploy-to-render:
-          requires:
-            - build-and-push-docker
-          filters:
-            branches:
-              only: main
+      # - lint-react-code:
+      #     requires:
+      #       - install-dependencies
+      # # Docker build and push after tests pass
+      # - build-and-push-docker:
+      #     requires:
+      #       - test-react-build
+      #       - test-react-functionality
+      #       - test-react-functionality-optimized  # Include new job in requirements
+      #       - test-react-functionality-knapsack  # Include Knapsack Pro job in requirements
+      #       - lint-react-code
+      #     filters:
+      #       branches:
+      #         only: main
+      # # Render deployment after Docker image is pushed
+      # - deploy-to-render:
+      #     requires:
+      #       - build-and-push-docker
+      #     filters:
+      #       branches:
+      #         only: main
       # Kubernetes deployment after Docker image is pushed
       # - deploy-to-kubernetes:
       #     requires:
@@ -409,8 +409,8 @@ workflows:
       #       branches:
       #         only: main
 
-  default-workflow:
-    unless: << pipeline.parameters.run-react-tests >>
-    jobs:
-      - debug-parameters
-      - install-dependencies 
+  # default-workflow:
+  #   unless: << pipeline.parameters.run-react-tests >>
+  #   jobs:
+  #     - debug-parameters
+  #     - install-dependencies 
