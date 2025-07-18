@@ -57,7 +57,8 @@ jobs:
               if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
                 echo "🔄 Detected corrupted dependencies, reinstalling..."
                 rm -rf node_modules
-                npm ci
+                # Use npm install instead of npm ci to handle package-lock.json sync issues
+                npm install
               fi
             fi
       - run:
@@ -96,7 +97,8 @@ jobs:
               if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
                 echo "🔄 Detected corrupted dependencies, reinstalling..."
                 rm -rf node_modules
-                npm ci
+                # Use npm install instead of npm ci to handle package-lock.json sync issues
+                npm install
               fi
             fi
       - run:
