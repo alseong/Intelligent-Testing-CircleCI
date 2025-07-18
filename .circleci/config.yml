@@ -1,10 +1,5 @@
 version: 2.1
 
-# Add orbs for Docker and Kubernetes
-orbs:
-  docker: circleci/docker@2.2.0
-  kubernetes: circleci/kubernetes@1.3.1
-
 parameters:
   image-tag:
     type: string
@@ -14,11 +9,6 @@ executors:
   node-executor:
     docker:
       - image: cimg/node:18.17
-    working_directory: ~/project
-  
-  docker-executor:
-    docker:
-      - image: cimg/base:stable
     working_directory: ~/project
 
 jobs:
@@ -35,47 +25,6 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths:
             - node_modules
-
-  
-  test-react-functionality:
-    executor: node-executor
-    parallelism: 4
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-      - run:
-          name: Install dependencies if not cached
-          command: |
-            if [ ! -d "node_modules" ]; then
-              echo "🔄 Installing dependencies..."
-              npm ci
-            else
-              echo "✅ Dependencies found in cache"
-              # Verify critical dependencies are properly installed
-              if [ ! -f "node_modules/emittery/index.js" ] || [ ! -f "node_modules/emittery/maps.js" ]; then
-                echo "🔄 Detected corrupted dependencies, reinstalling..."
-                rm -rf node_modules
-                # Use npm install instead of npm ci to handle package-lock.json sync issues
-                npm install
-              fi
-            fi
-      - run:
-          name: Run React tests
-          command: |
-            mkdir -p test-results
-            find src -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r -I {} npm test {} -- --coverage --watchAll=false --reporters=default --reporters=jest-junit"
-            echo "✅ React tests completed"
-          environment:
-            CI: true
-            JEST_JUNIT_OUTPUT_DIR: test-results
-            JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
-      - store_test_results:
-          path: test-results
-      - store_artifacts:
-          path: coverage
-          destination: coverage-report
 
   test-react-functionality-knapsack:
     executor: node-executor
@@ -122,11 +71,6 @@ workflows:
   test:
     jobs:
       - install-dependencies
-            
-      # - test-react-functionality:
-      #     requires:
-      #       - install-dependencies
-            
       - test-react-functionality-knapsack:
           requires:
             - install-dependencies
