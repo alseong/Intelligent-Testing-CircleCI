@@ -31,7 +31,7 @@ jobs:
           environment:
             CI: true
             JEST_JUNIT_OUTPUT_DIR: test-results
-            JEST_JUNIT_OUTPUT_NAME: jest-junit-$CIRCLE_NODE_INDEX.xml
+            JEST_JUNIT_OUTPUT_NAME: jest-junit-${CIRCLE_NODE_INDEX}.xml
             JEST_JUNIT_ADD_FILE_ATTRIBUTE: "true"
       - store_test_results:
           path: test-results
