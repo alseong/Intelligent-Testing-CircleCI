@@ -26,7 +26,7 @@ jobs:
           name: Run React tests
           command: |
             mkdir -p test-results
-            find tests -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r -I {} npx jest {} --coverage --watchAll=false --reporters=default --reporters=jest-junit"
+            find tests -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r -I {} npm jest {} --coverage --watchAll=false --reporters=default --reporters=jest-junit"
             echo "✅ React tests completed"
           environment:
             CI: true
