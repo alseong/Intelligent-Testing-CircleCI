@@ -14,7 +14,7 @@ executors:
 jobs:
   test-react-functionality-knapsack:
     executor: node-executor
-    parallelism: 4
+    parallelism: 2
     steps:
       - checkout
       - run:
@@ -23,20 +23,6 @@ jobs:
             echo "🔄 Installing fresh dependencies..."
             npm ci
             echo "✅ All dependencies installed!"
-      - run:
-          name: Debug - Check test files
-          command: |
-            echo "📁 Current directory:"
-            pwd
-            echo "📁 Tests directory:"
-            ls -la tests/
-            echo "📁 Test files with various patterns:"
-            echo "Pattern: tests/*.test.js"
-            ls tests/*.test.js | head -5
-            echo "Pattern: ./tests/**/*.test.js"
-            find ./tests -name "*.test.js" | head -5
-            echo "📁 Testing glob patterns:"
-            node -e "console.log(require('glob').sync('tests/**/*.test.js'))" || echo "glob test failed"
       - run:
           name: Run React tests with Knapsack Pro
           command: |
