@@ -16,6 +16,6 @@ describe('Glacially Slow 15000ms Tests', () => {
 
   test('glacial test 4 - final countdown', async () => {
     await new Promise(resolve => setTimeout(resolve, 3750));
-    expect('CircleCI test splitting rocks! '.split(' ')).toHaveLength(4);
+    expect('CircleCI test splitting rocks!'.split(' ')).toHaveLength(4);
   });
 }); 
