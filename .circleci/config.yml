@@ -25,13 +25,13 @@ jobs:
       - run:
           name: Run React tests
           command: |
+            export JEST_JUNIT_OUTPUT_NAME="jest-junit-${CIRCLE_NODE_INDEX}.xml"
             mkdir -p test-results
             find tests -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r -I {} npm test {} -- --coverage --watchAll=false --reporters=default --reporters=jest-junit"
             echo "✅ React tests completed"
           environment:
             CI: true
             JEST_JUNIT_OUTPUT_DIR: test-results
-            JEST_JUNIT_OUTPUT_NAME: jest-junit-${CIRCLE_NODE_INDEX}.xml
             JEST_JUNIT_ADD_FILE_ATTRIBUTE: "true"
       - store_test_results:
           path: test-results
