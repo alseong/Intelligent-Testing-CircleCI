@@ -23,20 +23,15 @@ jobs:
             npm install
             echo "✅ All dependencies installed!"
       - run:
-          name: Create required directories
+          name: Run React tests
           command: |
-            mkdir -p test-results coverage
-            echo "📁 Created test-results and coverage directories"
-      - run:
-          name: Run React tests using test suites
-          command: |
-            echo "🚀 Running tests with CircleCI test optimization..."
-            circleci tests run test-suite "react-tests"
+            mkdir -p test-results
+            find tests -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r -I {} npm test {} -- --coverage --watchAll=false --reporters=default --reporters=jest-junit"
             echo "✅ React tests completed"
-            echo "📊 Test results:"
-            ls -la test-results/ || echo "No test-results directory"
-            echo "📈 Coverage files:"
-            ls -la coverage/ || echo "No coverage directory"
+          environment:
+            CI: true
+            JEST_JUNIT_OUTPUT_DIR: test-results
+            JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
       - store_test_results:
           path: test-results
       - store_artifacts:
