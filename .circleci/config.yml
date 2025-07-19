@@ -26,12 +26,21 @@ jobs:
           name: Run React tests
           command: |
             mkdir -p test-results
-            find tests -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r -I {} npm test {} -- --coverage --watchAll=false --reporters=default --reporters=jest-junit"
+            echo "=== Container $CIRCLE_NODE_INDEX of $CIRCLE_NODE_TOTAL ==="
+            echo "Files assigned to this container:"
+            ASSIGNED_FILES=$(find tests -name "*.test.js" -o -name "*.test.jsx" | circleci tests split --split-by=timings)
+            echo "$ASSIGNED_FILES"
+            echo "=== Running tests ==="
+            if [ -n "$ASSIGNED_FILES" ]; then
+              echo "$ASSIGNED_FILES" | xargs -r -I {} npx jest {} --coverage --watchAll=false --reporters=default --reporters=jest-junit --testNamePattern=".*" --verbose
+            else
+              echo "No tests assigned to this container"
+            fi
             echo "✅ React tests completed"
           environment:
             CI: true
             JEST_JUNIT_OUTPUT_DIR: test-results
-            JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
+            JEST_JUNIT_OUTPUT_NAME: "jest-junit-$CIRCLE_NODE_INDEX.xml"
             JEST_JUNIT_ADD_FILE_ATTRIBUTE: "true"
       - store_test_results:
           path: test-results
