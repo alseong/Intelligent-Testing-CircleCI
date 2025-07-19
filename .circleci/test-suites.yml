@@ -12,6 +12,7 @@ outputs:
   junit: test-results/jest-junit.xml
 
 
+
 # ---
 # name: react-tests
 # discover: find src -name "*.test.js" -o -name "*.test.jsx"

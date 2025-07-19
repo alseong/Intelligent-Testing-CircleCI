@@ -23,13 +23,25 @@ jobs:
             npm install
             echo "✅ All dependencies installed!"
       - run:
+          name: Create required directories
+          command: |
+            mkdir -p test-results coverage
+            echo "📁 Created test-results and coverage directories"
+      - run:
           name: Run React tests using test suites
           command: |
             echo "🚀 Running tests with CircleCI test optimization..."
             circleci tests run test-suite "react-tests"
             echo "✅ React tests completed"
+            echo "📊 Test results:"
+            ls -la test-results/ || echo "No test-results directory"
+            echo "📈 Coverage files:"
+            ls -la coverage/ || echo "No coverage directory"
       - store_test_results:
           path: test-results
+      - store_artifacts:
+          path: test-results
+          destination: test-results
       - store_artifacts:
           path: coverage
           destination: coverage-report
