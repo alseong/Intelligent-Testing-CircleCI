@@ -1,13 +1,15 @@
 
 ---
 name: react-tests
-discover: find src -name "*.test.js" -o -name "*.test.jsx"
+discover: find tests -name "*.test.js" -o -name "*.test.jsx"
 run: 
-  command: npm test <<test.atoms>> -- --coverage --reporters=default --reporters=jest-junit 
+  command: npm test <<test.atoms>> -- --coverage --watchAll=false --reporters=default --reporters=jest-junit 
   environment:
     CI: true
+    JEST_JUNIT_OUTPUT_DIR: test-results
+    JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
 outputs:
-  junit: << outputs.junit >>
+  junit: test-results/jest-junit.xml
 
 
 # ---

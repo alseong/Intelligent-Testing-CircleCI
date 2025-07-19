@@ -12,38 +12,32 @@ executors:
     working_directory: ~/project
 
 jobs:
-  test-react-functionality-knapsack:
+  test-react-functionality:
     executor: node-executor
     parallelism: 4
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install npm dependencies
           command: |
-            echo "🔄 Installing fresh dependencies..."
-            npm ci
+            npm install
             echo "✅ All dependencies installed!"
       - run:
-          name: Run React tests with Knapsack Pro
+          name: Run React tests using test suites
           command: |
-            mkdir -p test-results
-            npx knapsack-pro-jest --runInBand --reporters=default --reporters=jest-junit
-            echo "✅ Knapsack Pro React tests completed"
-          environment:
-            CI: true
-            KNAPSACK_PRO_TEST_FILE_PATTERN: "./tests/**/*.test.js"
-            JEST_JUNIT_OUTPUT_DIR: test-results
-            JEST_JUNIT_OUTPUT_NAME: results-${CIRCLE_NODE_INDEX}.xml
+            echo "🚀 Running tests with CircleCI test optimization..."
+            circleci tests run test-suite "react-tests"
+            echo "✅ React tests completed"
       - store_test_results:
           path: test-results
       - store_artifacts:
-          path: test-results
-          destination: test-reports
+          path: coverage
+          destination: coverage-report
 
 workflows:
   test:
     jobs:
-      - test-react-functionality-knapsack
+      - test-react-functionality
 
   
   

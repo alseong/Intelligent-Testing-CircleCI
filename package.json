@@ -6,20 +6,16 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:knapsack": "npx knapsack-pro-jest",
+    "test": "jest tests/ --watchAll=false",
+    "test:all": "jest --testPathPattern='(src|tests).*\\.(test|spec)\\.(js|jsx|ts|tsx)$' --watchAll=false",
     "eject": "react-scripts eject"
   },
       "jest": {
       "collectCoverageFrom": [
-        "src/**/*.{js,jsx,ts,tsx}",
-        "!src/**/*.d.ts",
         "tests/**/*.{js,jsx,ts,tsx}"
       ],
       "testMatch": [
-        "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-        "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}",
-        "<rootDir>/tests/**/*.{spec,test}.{js,jsx,ts,tsx}"
+        "<rootDir>/tests/**/*.{js,jsx,ts,tsx}"
       ],
       "moduleNameMapper": {
         "^.+\\.(css|less|scss|sass)$": "identity-obj-proxy",
@@ -38,7 +34,6 @@
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
-    "@knapsack-pro/jest": "^8.1.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
