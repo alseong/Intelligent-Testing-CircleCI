@@ -6,7 +6,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest tests/ --watchAll=false",
+    "test": "jest --watchAll=false",
     "test:all": "jest --testPathPattern='(src|tests).*\\.(test|spec)\\.(js|jsx|ts|tsx)$' --watchAll=false",
     "eject": "react-scripts eject"
   },
