@@ -53,7 +53,7 @@ jobs:
           command: |
             mkdir -p test-results
             echo "🚀 Running tests with new CircleCI test optimization..."
-            circleci tests run test-suite "react-tests"
+            circleci tests run test-suite "react-tests" --verbose
             echo "✅ Optimized React tests completed"
       - store_test_results:
           path: test-results
