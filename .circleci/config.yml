@@ -38,12 +38,35 @@ jobs:
       - store_artifacts:
           path: test-results
           destination: test-results
+  test-react-functionality-optimized:
+    executor: node-executor
+    parallelism: 4
+    steps:
+      - checkout
+      - run:
+          name: Install npm dependencies
+          command: |
+            npm install
+            echo "✅ All dependencies installed!"
+      - run:
+          name: Run React tests with optimization
+          command: |
+            mkdir -p test-results
+            echo "🚀 Running tests with new CircleCI test optimization..."
+            circleci tests run test-suite "react-tests"
+            echo "✅ Optimized React tests completed"
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: coverage
+          destination: coverage-report
    
 
 workflows:
   test:
     jobs:
       - test-react-functionality
+      - test-react-functionality-optimized
 
   
   
