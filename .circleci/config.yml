@@ -27,7 +27,7 @@ jobs:
           command: |
             export JEST_JUNIT_OUTPUT_NAME="jest-junit-${CIRCLE_NODE_INDEX}.xml"
             mkdir -p test-results
-            find tests -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r npx jest -- --coverage --watchAll=false --reporters=default --reporters=jest-junit --passWithNoTests"
+            find tests -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r npx jest --coverage --watchAll=false --reporters=default --reporters=jest-junit --passWithNoTests"
             echo "✅ React tests completed"
           environment:
             CI: true
