@@ -54,7 +54,6 @@ jobs:
       - run:
           name: Run React tests with optimization
           command: |
-            mkdir -p test-results
             echo "🚀 Running tests with new CircleCI test optimization..."
             circleci tests run  test-suite "react-tests" 
             echo "✅ Optimized React tests completed"

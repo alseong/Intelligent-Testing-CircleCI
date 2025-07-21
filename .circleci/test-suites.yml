@@ -5,8 +5,6 @@ run:
   command: npx jest <<test.atoms>> --coverage=true --watchAll=false --reporters=default --reporters=jest-junit
   environment:
     CI: true
-    # JEST_JUNIT_OUTPUT_DIR: test-results
-    # JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
 outputs:
   junit: test-results/jest-junit.xml
 # what does outputs: do? is it a replacement of the environment variables? also what will the output.junit do?
