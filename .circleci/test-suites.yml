@@ -2,7 +2,7 @@
 name: react-tests
 discover: find tests -name "*.test.js" -o -name "*.test.jsx"
 run:
-  command: npx jest <<test.atoms>> -- --coverage --watchAll=false --reporters=default --reporters=jest-junit
+  command: npm test <<test.atoms>> -- --coverage --watchAll=false --reporters=default --reporters=jest-junit
   environment:
     CI: true
     JEST_JUNIT_OUTPUT_DIR: test-results
