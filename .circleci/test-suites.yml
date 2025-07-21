@@ -11,6 +11,7 @@ outputs:
   junit: <<outputs.junit>>
 # what does outputs: do? is it a replacement of the environment variables? also what will the output.junit do?
 # Is parallelism supported with this format? it doesn;t seem to work.
+#coverage not being stored
 
 # ---
 # name: react-tests
