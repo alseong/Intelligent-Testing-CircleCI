@@ -38,6 +38,9 @@ jobs:
       - store_artifacts:
           path: test-results
           destination: test-results
+      - store_artifacts:
+          path: coverage
+          destination: coverage
   test-react-functionality-optimized:
     executor: node-executor
     parallelism: 4
