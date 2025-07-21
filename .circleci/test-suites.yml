@@ -1,30 +1,28 @@
-
 ---
 name: react-tests
 discover: find tests -name "*.test.js" -o -name "*.test.jsx"
-run: 
-  command: npm test <<test.atoms>> -- --coverage --watchAll=false --reporters=default --reporters=jest-junit 
+run:
+  command: npx jest <<test.atoms>> -- --coverage --watchAll=false --reporters=default --reporters=jest-junit
   environment:
     CI: true
     JEST_JUNIT_OUTPUT_DIR: test-results
     JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
 outputs:
   junit: test-results/jest-junit.xml
-
-
+# what does outputs: do? is it a replacement of the environment variables? also what will the output.junit do?
+# Is parallelism supported with this format? it doesn;t seem to work.
 
 # ---
 # name: react-tests
 # discover: find src -name "*.test.js" -o -name "*.test.jsx"
-# run: 
+# run:
 #   command: xargs -r -I {} npm test {} -- --coverage --watchAll=false --reporters=default --reporters=jest-junit --passWithNoTests
 #   environment:
 #     CI: true
 #     JEST_JUNIT_OUTPUT_DIR: test-results
 #     JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
 # outputs:
-#   junit: test-results/jest-junit.xml 
-
+#   junit: test-results/jest-junit.xml
 
 #With this implementation, we can create a central queue? Is this already done?
 

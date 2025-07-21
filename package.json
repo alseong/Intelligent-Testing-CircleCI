@@ -2,7 +2,7 @@
   "name": "react-calculator-app",
   "version": "1.0.0",
   "description": "A React calculator web application",
-  "main": "src/App.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
