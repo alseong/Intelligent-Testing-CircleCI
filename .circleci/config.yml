@@ -62,7 +62,7 @@ jobs:
           path: test-results
       - store_artifacts:
           path: coverage
-          destination: coverage-report
+          destination: coverage
 
 workflows:
   test:
