@@ -7,8 +7,8 @@ run:
     CI: true
     JEST_JUNIT_OUTPUT_DIR: test-results
     JEST_JUNIT_OUTPUT_NAME: jest-junit.xml
-# outputs:
-#   junit: test-results/jest-junit.xml
+outputs:
+  junit: <<outputs.junit>>
 # what does outputs: do? is it a replacement of the environment variables? also what will the output.junit do?
 # Is parallelism supported with this format? it doesn;t seem to work.
 
