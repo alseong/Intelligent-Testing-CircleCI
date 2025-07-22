@@ -61,6 +61,8 @@ jobs:
             ls -la
             echo "📁 Coverage directory contents:"
             ls -la coverage/ || echo "❌ Coverage directory doesn't exist"
+      - store_test_results:
+          path: test-results
       - store_artifacts:
           path: test-results
           destination: test-results
