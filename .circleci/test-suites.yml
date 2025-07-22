@@ -1,6 +1,6 @@
 ---
 name: react-tests
-discover: find tests -name "*.test.js" -o -name "*.test.jsx"
+discover: find tests2 -name "*.test.js" -o -name "*.test.jsx"
 run:
   command: npx jest << test.atoms >> --coverage --watchAll=false --reporters=default --reporters=jest-junit
   environment:

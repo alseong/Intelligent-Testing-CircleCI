@@ -2,30 +2,34 @@
   "name": "react-calculator-app",
   "version": "1.0.0",
   "description": "A React calculator web application",
-  "main": "src/index.js",
+  "main": "src/App.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --watchAll=false",
-    "test:all": "jest --testPathPattern='(src|tests).*\\.(test|spec)\\.(js|jsx|ts|tsx)$' --watchAll=false",
+    "test": "react-scripts test",
+    "test:knapsack": "npx knapsack-pro-jest",
     "eject": "react-scripts eject"
   },
-      "jest": {
-      "collectCoverageFrom": [
-        "tests/**/*.{js,jsx,ts,tsx}"
-      ],
-      "testMatch": [
-        "<rootDir>/tests/**/*.{js,jsx,ts,tsx}"
-      ],
-      "testPathIgnorePatterns": [
-        "<rootDir>/src/"
-      ],
-      "moduleNameMapper": {
-        "^.+\\.(css|less|scss|sass)$": "identity-obj-proxy",
-        "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy"
-      },
-      "resetMocks": true
+  "jest": {
+    "testTimeout": 60000,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts",
+      "tests/**/*.{js,jsx,ts,tsx}",
+      "tests2/**/*.{js,jsx,ts,tsx}"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}",
+      "<rootDir>/tests/**/*.{spec,test}.{js,jsx,ts,tsx}",
+      "<rootDir>/tests2/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(css|less|scss|sass)$": "identity-obj-proxy",
+      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy"
     },
+    "resetMocks": true
+  },
   "babel": {
     "presets": [
       "react-app"
@@ -37,6 +41,7 @@
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
+    "@knapsack-pro/jest": "^8.1.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
