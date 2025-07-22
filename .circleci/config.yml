@@ -57,10 +57,6 @@ jobs:
             echo "🚀 Running tests with new CircleCI test optimization..."
             circleci tests run  test-suite "react-tests" 
             echo "✅ Optimized React tests completed"
-            echo "📁 Contents after running tests:"
-            ls -la
-            echo "📁 Coverage directory contents:"
-            ls -la coverage/ || echo "❌ Coverage directory doesn't exist"
       - store_test_results:
           path: test-results
       - store_artifacts:

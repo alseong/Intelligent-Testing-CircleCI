@@ -5,8 +5,10 @@ run:
   command: npx jest << test.atoms >> --coverage --watchAll=false --reporters=default --reporters=jest-junit --runInBand
   environment:
     CI: true
+    JEST_JUNIT_OUTPUT_NAME: jest-junit-${CIRCLE_NODE_INDEX}.xml
+    JEST_JUNIT_OUTPUT_DIR: test-results
 outputs:
-  junit: test-results/jest-junit-<< test.atoms >>-<< test.index >>.xml
+  junit: test-results
 # what does outputs: do? is it a replacement of the environment variables? also what will the output.junit do?
 # Test splitting does not seem to work. Need to add space
 # coverage not being stored if i just use --coverage
