@@ -8,7 +8,7 @@ run:
 outputs:
   junit: test-results/jest-junit.xml
 # what does outputs: do? is it a replacement of the environment variables? also what will the output.junit do?
-# Test splitting does not seem to work.
+# Test splitting does not seem to work. Need to add space
 # coverage not being stored if i just use --coverage
 
 #With this implementation, we can create a central queue? Is this already done?
