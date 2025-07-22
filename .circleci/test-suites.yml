@@ -6,7 +6,7 @@ run:
   environment:
     CI: true
 outputs:
-  junit: test-results
+  junit: test-results/jest-junit-<< test.atoms >>-<< test.index >>.xml
 # what does outputs: do? is it a replacement of the environment variables? also what will the output.junit do?
 # Test splitting does not seem to work. Need to add space
 # coverage not being stored if i just use --coverage
