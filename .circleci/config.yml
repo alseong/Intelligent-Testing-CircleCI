@@ -24,7 +24,7 @@ jobs:
             echo "✅ All dependencies installed!"
       - run:
           name: Run React tests
-          command: circleci run testsuite "ci tests" --impact-analysis=impacted
+          command: circleci run testsuite "ci tests" --test-analysis=impacted
       - store_test_results:
           path: test-results
   test-react-functionality-optimized:
