@@ -1,22 +1,6 @@
----
-name: react-tests
-discover: find tests2 -name "*.test.js" -o -name "*.test.jsx"
-run:
-  command: npx jest << test.atoms >> --coverage --watchAll=false --reporters=default --reporters=jest-junit --runInBand
-  environment:
-    CI: true
-    JEST_JUNIT_OUTPUT_NAME: jest-junit-${CIRCLE_NODE_INDEX}.xml
-    JEST_JUNIT_OUTPUT_DIR: test-results
+name: ci tests
+runner: jest # Predefined runner with defaults
 outputs:
-  junit: test-results
-# what does outputs: do? is it a replacement of the environment variables? also what will the output.junit do?
-# Test splitting does not seem to work. Need to add space
-# coverage not being stored if i just use --coverage
-
-#With this implementation, we can create a central queue? Is this already done?
-
-#how to incorporate test.atoms? This will automatically split into atoms and pipe into run npm command so that no need to use xargs
-
-# turns out I need store_test_results to store the test results in the test-results directory...OH ok <<outputs.junit>> is not completed yet. But it seems like I can still use output.junit.
-#what is the different between using outputs vs results key word? If using this, no need to set environment variables for output dir and name?
-#How to use outputs.junit? How does the output value get dynamically generated? Why is it useful? In case we use parallelism and we need different output files for each test?
+  junit: results/tests.xml # Test results location
+options:
+  adaptive-testing: true # Enable test impact analysis

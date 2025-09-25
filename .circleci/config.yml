@@ -24,23 +24,9 @@ jobs:
             echo "✅ All dependencies installed!"
       - run:
           name: Run React tests
-          command: |
-            export 
-            mkdir -p test-results
-            find tests2 -name "*.test.js" -o -name "*.test.jsx" | circleci tests run --split-by=timings --command "xargs -r npx jest --runInBand --coverage --watchAll=false --reporters=default --reporters=jest-junit --passWithNoTests"
-            echo "✅ React tests completed"
-          environment:
-            CI: true
-            JEST_JUNIT_OUTPUT_NAME: jest-junit-${CIRCLE_NODE_INDEX}.xml
-            JEST_JUNIT_OUTPUT_DIR: test-results
+          command: circleci run testsuite "ci tests"
       - store_test_results:
           path: test-results
-      - store_artifacts:
-          path: test-results
-          destination: test-results
-      - store_artifacts:
-          path: coverage
-          destination: coverage
   test-react-functionality-optimized:
     executor: node-executor
     parallelism: 4
